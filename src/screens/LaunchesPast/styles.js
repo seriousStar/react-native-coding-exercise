@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import colors from '../../themes/colors';
+import {colors, metrics} from '../../themes';
 
 export const styles = StyleSheet.create({
   parentContainer: {
@@ -88,6 +88,61 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     height: 220,
     borderRadius: 10,
-    marginTop: 20
+    marginTop: 20,
+  },
+  filterSeparator: {
+    height: 6,
+    backgroundColor: colors.primary,
+    marginHorizontal: 10,
+    marginTop: 5,
+    borderRadius: 3,
+  },
+  launchItemContainer: {
+    height: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  launchItemBtn: {
+    height: 70,
+    width: (metrics.width / 3) * 2,
+    minWidth: 90,
+    backgroundColor: colors.lightYellow,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedLaunchItemBtn: {
+    height: 70,
+    width: (metrics.width / 3) * 2,
+    minWidth: 150,
+    backgroundColor: colors.red,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separator: {
+    height: 10,
+  },
+  list: {
+    marginTop: 20,
+  },
+  grayText: {
+    color: colors.gray,
+    fontSize: 15,
+  },
+  whiteText: {
+    color: colors.white,
+    fontSize: 15,
+  },
+  rightIcon: {
+    width: 30,
+    height: 30,
+  },
+  rightBtnIcon: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    right: metrics.width / 14,
+    top: 20
   },
 });
