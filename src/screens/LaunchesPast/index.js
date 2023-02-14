@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Alert} from 'react-native';
 import {gql, useQuery} from '@apollo/client';
 
 import common from '../../themes/common';
@@ -12,12 +12,12 @@ import colors from '../../themes/colors';
 import {FilterAndSort} from './components/FilterAndSort';
 import {FILTER_OPTIONS} from '../../constants';
 import {LaunchList} from './components/LaunchList';
+import {Indicator} from '../../components/Indicator';
 
 const GET_LAUNCHESPAST = gql`
-  query ($limit: Int) {
-    launchesPast(limit: $limit) {
+  query ($limit: Int, $offset: Int, $sort: String, $find: LaunchFind) {
+    launchesPast(limit: $limit, offset: $offset, sort: $sort, find: $find) {
       id
-      details
       mission_name
       rocket {
         rocket_type
@@ -27,61 +27,20 @@ const GET_LAUNCHESPAST = gql`
   }
 `;
 
-const DUMMY_DATA = [
-  {
-    mission_name: 'FalconSat',
-    rocket: {
-      rocket_type: 'rocket',
-      rocket_name: 'Falcon 1',
-    },
-    id: '5eb87cd9ffd86e000604b32a',
-  },
-  {
-    mission_name: 'DemoSat',
-    rocket: {
-      rocket_type: 'rocket',
-      rocket_name: 'Falcon 1',
-    },
-    id: '5eb87cdaffd86e000604b32b',
-  },
-  {
-    mission_name: 'Trailblazer',
-    rocket: {
-      rocket_type: 'rocket',
-      rocket_name: 'Falcon 1',
-    },
-    id: '5eb87cdbffd86e000604b32c',
-  },
-  {
-    mission_name: 'RatSat',
-    rocket: {
-      rocket_type: 'rocket',
-      rocket_name: 'Falcon 1',
-    },
-    id: '5eb87cdbffd86e000604b32d',
-  },
-  {
-    mission_name: 'RazakSat',
-    rocket: {
-      rocket_type: 'rocket',
-      rocket_name: 'Falcon 1',
-    },
-    id: '5eb87cdcffd86e000604b32e',
-  },
-];
-
 const LauchnesPast = ({navigation}) => {
   const [searchValue, setSearchValue] = useState('');
   const [filter, setFilter] = useState(FILTER_OPTIONS[2]);
   const [sortBy, setSortBy] = useState('asc');
   const [selectedLaunchItem, setSelectedLaunchItem] = useState(null);
   const insets = useSafeAreaInsets();
-  // const {loading, error, data} = useQuery(GET_LAUNCHESPAST, {
-  //   variables: {limit: 10},
-  // });
-  // console.info('loading', loading);
-  // console.info('error', error);
-  // console.info('data', data);
+
+  const {loading, error, data, fetchMore, refetch} = useQuery(GET_LAUNCHESPAST, {
+    variables: {limit: 10, offset: 0, sort: sortBy},
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only',
+  });
+  console.info('error', error);
+  console.info('data', data);
 
   const onSortBy = () => {
     setSortBy(_sortBy => (_sortBy === 'asc' ? 'desc' : 'asc'));
@@ -94,6 +53,24 @@ const LauchnesPast = ({navigation}) => {
   const onSelectedLaunchItem = (id, index) => setSelectedLaunchItem(id);
 
   const onDetailScreen = () => navigation.navigate('LaunchDetail');
+
+  const onLoadMore = async () => {
+    if (!data.launchesPast) {
+      return Alert.alert('SpaceX', 'unable to load. something went wrong');
+    }
+    await fetchMore({
+      variables: {
+        offset: data.launchesPast.length,
+        limit: data.launchesPast.length + 10,
+      },
+      updateQuery: (prev, {fetchMoreResult}) => {
+        console.info('prev', prev);
+        console.info('fetchmore', fetchMoreResult);
+        if (!fetchMoreResult) return prev;
+        return {launchesPast: [...prev.launchesPast, ...fetchMoreResult.launchesPast]};
+      },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.parentContainer} edges={['left', 'right', 'top']}>
@@ -116,17 +93,20 @@ const LauchnesPast = ({navigation}) => {
           onSortBy={onSortBy}
           onSetCurrentFilter={onSetCurrentFilter}
         />
-        <LaunchList
-          data={DUMMY_DATA}
-          onSelectedLaunchItem={onSelectedLaunchItem}
-          selectedLaunchItem={selectedLaunchItem}
-          onDetailScreen={onDetailScreen}
-        />
+        {data?.launchesPast && (
+          <LaunchList
+            data={data?.launchesPast || []}
+            onSelectedLaunchItem={onSelectedLaunchItem}
+            selectedLaunchItem={selectedLaunchItem}
+            onDetailScreen={onDetailScreen}
+          />
+        )}
         <View style={[styles.paginationContainer, {marginBottom: insets.bottom || 30}]}>
           <Text style={styles.primaryText}>6 of 45</Text>
-          <NormalButton label="LOAD MORE" />
+          <NormalButton label="LOAD MORE" onPress={onLoadMore} />
         </View>
       </View>
+      <Indicator isLoading={loading} />
     </SafeAreaView>
   );
 };
