@@ -35,7 +35,12 @@ const LauchnesPast = ({navigation}) => {
   const insets = useSafeAreaInsets();
 
   const {loading, error, data, fetchMore, refetch} = useQuery(GET_LAUNCHESPAST, {
-    variables: {limit: 10, offset: 0, sort: sortBy},
+    variables: {
+      limit: 10,
+      offset: 0,
+      sort: sortBy,
+      find: {mission_name: searchValue || null},
+    },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
   });
