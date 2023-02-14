@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {View, Text, Image} from 'react-native';
 import {gql, useQuery} from '@apollo/client';
 
 import common from '../../themes/common';
@@ -75,7 +75,7 @@ const LauchnesPast = () => {
   const [filter, setFilter] = useState(FILTER_OPTIONS[2]);
   const [sortBy, setSortBy] = useState('asc');
   const [selectedLaunchItem, setSelectedLaunchItem] = useState(null);
-
+  const insets = useSafeAreaInsets();
   // const {loading, error, data} = useQuery(GET_LAUNCHESPAST, {
   //   variables: {limit: 10},
   // });
@@ -119,6 +119,10 @@ const LauchnesPast = () => {
           onSelectedLaunchItem={onSelectedLaunchItem}
           selectedLaunchItem={selectedLaunchItem}
         />
+        <View style={[styles.paginationContainer, {marginBottom: insets.bottom || 30}]}>
+          <Text style={styles.primaryText}>6 of 45</Text>
+          <NormalButton label="LOAD MORE" />
+        </View>
       </View>
     </SafeAreaView>
   );

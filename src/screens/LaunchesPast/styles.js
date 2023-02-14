@@ -143,6 +143,12 @@ export const styles = StyleSheet.create({
     height: 30,
     position: 'absolute',
     right: metrics.width / 14,
-    top: 20
+    top: 20,
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: 20
   },
 });
