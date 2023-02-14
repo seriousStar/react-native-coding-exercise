@@ -1,6 +1,8 @@
 import React from "react";
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import LauchnesPastScreen from "./src/screens/LaunchesPast";
+import { StatusBar } from "react-native";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Router from "./src/routes";
 
 const client = new ApolloClient({
   uri: "https://main--spacex-l4uc6p.apollographos.net/graphql",
@@ -10,7 +12,10 @@ const client = new ApolloClient({
 const App = () => {
   return (
     <ApolloProvider client={client}>
-      <LauchnesPastScreen />
+      <StatusBar hidden />
+      <SafeAreaProvider>
+        <Router />
+      </SafeAreaProvider>
     </ApolloProvider>
   );
 };
