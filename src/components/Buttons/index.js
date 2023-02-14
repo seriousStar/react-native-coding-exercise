@@ -9,3 +9,11 @@ export const NormalButton = ({label, onPress, btnStyle, txtStyle}) => {
     </TouchableOpacity>
   );
 };
+
+export const IconButton = ({icon, onPress, iconStyle, btnStyle}) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={[styles.iconBtn, btnStyle]}>
+      <Image source={icon} style={[styles.iconStyle, iconStyle]} />
+    </TouchableOpacity>
+  );
+};

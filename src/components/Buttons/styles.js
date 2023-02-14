@@ -8,11 +8,20 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   txtStyle: {
     color: colors.white,
     fontSize: 14,
     fontWeight: '600',
+  },
+  iconBtn: {
+    width: 20,
+    height: 20,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain'
   },
 });
