@@ -70,7 +70,7 @@ const DUMMY_DATA = [
   },
 ];
 
-const LauchnesPast = () => {
+const LauchnesPast = ({navigation}) => {
   const [searchValue, setSearchValue] = useState('');
   const [filter, setFilter] = useState(FILTER_OPTIONS[2]);
   const [sortBy, setSortBy] = useState('asc');
@@ -92,6 +92,8 @@ const LauchnesPast = () => {
   };
 
   const onSelectedLaunchItem = (id, index) => setSelectedLaunchItem(id);
+
+  const onDetailScreen = () => navigation.navigate('LaunchDetail');
 
   return (
     <SafeAreaView style={styles.parentContainer} edges={['left', 'right', 'top']}>
@@ -118,6 +120,7 @@ const LauchnesPast = () => {
           data={DUMMY_DATA}
           onSelectedLaunchItem={onSelectedLaunchItem}
           selectedLaunchItem={selectedLaunchItem}
+          onDetailScreen={onDetailScreen}
         />
         <View style={[styles.paginationContainer, {marginBottom: insets.bottom || 30}]}>
           <Text style={styles.primaryText}>6 of 45</Text>

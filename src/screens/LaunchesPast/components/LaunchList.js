@@ -3,7 +3,7 @@ import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import {IconButton} from '../../../components/Buttons';
 import {styles} from '../styles';
 
-export const LaunchList = ({selectedLaunchItem, onSelectedLaunchItem, data}) => {
+export const LaunchList = ({selectedLaunchItem, onSelectedLaunchItem, data, onDetailScreen}) => {
   const renderLaunchItem = ({item, index}) => {
     const isSelected = selectedLaunchItem === item.id;
     return (
@@ -18,6 +18,7 @@ export const LaunchList = ({selectedLaunchItem, onSelectedLaunchItem, data}) => 
             icon={require('../../../../assets/icons/right.png')}
             iconStyle={styles.rightIcon}
             btnStyle={styles.rightBtnIcon}
+            onPress={() => onDetailScreen(item)}
           />
         ) : null}
       </View>
