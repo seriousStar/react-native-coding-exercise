@@ -6,9 +6,8 @@ import {gql, useQuery} from '@apollo/client';
 import common from '../../themes/common';
 import {styles} from './styles';
 import {SearchInput} from '../../components/Input/SearchInput';
-import {IconButton, NormalButton} from '../../components/Buttons';
+import {NormalButton} from '../../components/Buttons';
 import {Header} from './components/Header';
-import colors from '../../themes/colors';
 import {FilterAndSort} from './components/FilterAndSort';
 import {FILTER_OPTIONS} from '../../constants';
 import {LaunchList} from './components/LaunchList';
@@ -38,17 +37,21 @@ const LauchnesPast = ({navigation}) => {
     variables: {
       limit: 10,
       offset: 0,
-      sort: sortBy,
-      find: {mission_name: searchValue || null},
+      sort: 'asc',
+      find: {mission_name: null},
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
   });
-  console.info('error', error);
-  console.info('data', data);
 
   const onSortBy = () => {
     setSortBy(_sortBy => (_sortBy === 'asc' ? 'desc' : 'asc'));
+    refetch({
+      limit: 10,
+      offset: 0,
+      sort: sortBy === 'asc' ? 'desc' : 'asc',
+      find: {mission_name: searchValue || null},
+    });
   };
 
   const onSetCurrentFilter = index => {
@@ -58,6 +61,10 @@ const LauchnesPast = ({navigation}) => {
   const onSelectedLaunchItem = (id, index) => setSelectedLaunchItem(id);
 
   const onDetailScreen = () => navigation.navigate('LaunchDetail');
+
+  const onSearch = async () => {
+    await refetch({limit: 10, offset: 0, sort: sortBy, find: {mission_name: searchValue || null}});
+  };
 
   const onLoadMore = async () => {
     if (!data.launchesPast) {
@@ -89,7 +96,7 @@ const LauchnesPast = ({navigation}) => {
             value={searchValue}
             onChange={setSearchValue}
           />
-          <NormalButton label="Search" btnStyle={styles.searchBtn} />
+          <NormalButton label="Search" btnStyle={styles.searchBtn} onPress={onSearch} />
         </View>
         <FilterAndSort
           filterOptions={FILTER_OPTIONS}
